@@ -11,9 +11,7 @@ app.use(express.static('public'));
 const Users = new Set();
 
 io.on('connection', (socket)=>{
-    console.log("An user is connected");
     socket.on('userName', (userName)=>{
-        console.log(`${userName} has connected to the server`);
         Users.add(userName);
         socket.userName = userName;
         io.emit('addedUser', userName);
@@ -28,7 +26,6 @@ io.on('connection', (socket)=>{
     });
 
     socket.on('disconnect', ()=>{
-        console.log('An user has been disconnected to the server');
         Users.forEach(user=>{
             if(user===socket.userName){
                 Users.delete(user);
