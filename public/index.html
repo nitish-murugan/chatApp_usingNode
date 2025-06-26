@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="list-user">
+        <h3> Online users </h3>
+        <ul id="users"></ul>
+    </div>
+    <div id="chat"></div>
+    <form id="messageForm">
+        <input type="text" id="messageBox" placeholder="Enter the text" required>
+        <button type="submit">Send</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        
+        const userList = document.getElementById('users');
+        const chat = document.getElementById('chat');
+        const messageForm = document.getElementById('messageForm');
+        const textMsg = document.getElementById('messageBox');
+
+        const userName = prompt('Enter your name: ');
+        socket.emit('userName', userName);
+        socket.on('addedUser', (message)=>{
+            addMessage(`${message} has joined the chat`);
+        });
+        socket.on('userList', (message)=>{
+            userList.innerHTML = message.map(user=> `<li>${user}</li>`).join("");
+        });
+        messageForm.addEventListener('submit', (event)=>{
+            event.preventDefault();
+            const extractMsg = textMsg.value;
+            socket.emit('userMessage', extractMsg);
+            textMsg.value = "";
+        });
+        socket.on('userMessage', (message)=>{
+            addMessage(`${message.userName}: ${message.message}`);
+        });
+
+        function addMessage(input){
+            const addMsgField = document.createElement('div');
+            addMsgField.textContent = input;
+            chat.appendChild(addMsgField);
+        }
+    </script>
+</body>
+</html>
