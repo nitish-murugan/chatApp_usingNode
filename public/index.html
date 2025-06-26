@@ -42,6 +42,9 @@
         socket.on('userMessage', (message)=>{
             addMessage(`${message.userName}: ${message.message}`);
         });
+        socket.on('disconnectedUser', (message)=>{
+            addMessage(`${message} has left the chat`);
+        });
 
         function addMessage(input){
             const addMsgField = document.createElement('div');

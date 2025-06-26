@@ -29,6 +29,7 @@ io.on('connection', (socket)=>{
         Users.forEach(user=>{
             if(user===socket.userName){
                 Users.delete(user);
+                io.emit('disconnectedUser', user);
                 io.emit('userList', Array.from(Users));
             }
         })
