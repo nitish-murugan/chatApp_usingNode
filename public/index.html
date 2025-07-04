@@ -166,12 +166,39 @@
       addMessage(`${message} has left the chat`);
     });
 
+    let messageCount = 0;
     function addMessage(input) {
-      const addMsgField = document.createElement('div');
-      addMsgField.textContent = input;
-      chat.appendChild(addMsgField);
-      chat.scrollTop = chat.scrollHeight;
+        const addMsgField = document.createElement('div');
+        const colonIndex = input.indexOf(':');
+        if (colonIndex !== -1) {
+            const name = input.slice(0, colonIndex);
+            const msg = input.slice(colonIndex + 1);
+            
+            const nameSpan = document.createElement('strong');
+            nameSpan.textContent = name + ':';
+
+            const msgSpan = document.createElement('span');
+            msgSpan.textContent = msg;
+
+            addMsgField.appendChild(nameSpan);
+            addMsgField.appendChild(document.createTextNode(' '));
+            addMsgField.appendChild(msgSpan);
+        } else {
+            addMsgField.textContent = input;
+        }
+        const colors = ['#f1f5f9', '#e2e8f0'];
+        addMsgField.style.backgroundColor = colors[messageCount % colors.length];
+        addMsgField.style.padding = '0.5rem 0.75rem';
+        addMsgField.style.borderRadius = '6px';
+        addMsgField.style.marginBottom = '0.5rem';
+        addMsgField.style.maxWidth = '75%';
+
+        chat.appendChild(addMsgField);
+        chat.scrollTop = chat.scrollHeight;
+        messageCount++;
     }
+
+
   </script>
 </body>
 </html>
